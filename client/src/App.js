@@ -18,6 +18,12 @@ class App extends Component {
           <h1>Light Configurator</h1>
         </header>
 
+        <section className="indicators">
+          <i className="fas fa-2x fa-fw fa-power-off text-white"></i>
+          <i className="fas fa-2x fa-fw fa-wifi text-danger blinking"></i>
+          {/* <i className="fas fa-2x fa-fw fa-wifi text-success"></i> */}
+        </section>
+
         <section className="preset">
           <span>TV Mode</span> <i className="fas fa-caret-down"></i>
         </section>
