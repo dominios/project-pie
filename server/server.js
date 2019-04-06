@@ -1,35 +1,32 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
+const io = require('socket.io')(http);
 
-const controller = require('./controller');
-
-const PORT = 9000;
+const router = require('./router');
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', express.static(__dirname + '/../client/build'));
+app.use(router);
 
-const server = http.createServer(app);
+// curl http://localhost:9000/api/v1/set -X POST -d "r=50&g=0&b=150"
 
-server.listen(PORT, () => {
-    console.log(`HTTP server started on port ${PORT}`)
+server.listen(process.env.PORT, () => {
+    console.log(`HTTP server started on port ${process.env.PORT}`);
 });
-    
-function health (req, res) {
-    res.send('ONLINE');
-}
 
-app.get('/api/health', health); 
-app.get('/api/random', controller.randomRGB);
-app.get('/api/off', controller.turnOff);
-app.post('/api/set', controller.setRGB);
-    
+io.on('connection', (socket) => {
+    console.log('socket.io connection initiated');
+
+    socket.on('disconnect', function () {
+        console.log('socket.io connection disconnected');
+    });
+});
+
 module.exports = app;
-
-
-// curl http://localhost:9000/api/set -X POST -d "r=50&g=0&b=150"
-

@@ -5,8 +5,11 @@
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "chalk": "^2.4.2",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "pigpio": "^1.2.2"
+    "pigpio": "^1.2.2",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {
