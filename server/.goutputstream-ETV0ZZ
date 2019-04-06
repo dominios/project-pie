@@ -2,8 +2,6 @@ const express = require('express');
 const http = require('http');
 const bodyParser = require('body-parser');
 
-const controller = require('./controller');
-
 const PORT = 9000;
 
 const app = express();
@@ -18,18 +16,22 @@ const server = http.createServer(app);
 server.listen(PORT, () => {
     console.log(`HTTP server started on port ${PORT}`)
 });
+
+try {
     
-function health (req, res) {
-    res.send('ONLINE');
+    const controller = require('./controller');
+    app.get('/api/random', controller.random);
+    app.get('/api/off', controller.turnOff);
+    app.post('/api/set', controller.setRGB);
+    
+    
+} catch (err) {
+    console.warn('controller could not be loaded');
+    app.get('/api/toggle', (req, res) => {
+        res.send('Controller cound not be loaded');
+    });
 }
 
-app.get('/api/health', health); 
-app.get('/api/random', controller.randomRGB);
-app.get('/api/off', controller.turnOff);
-app.post('/api/set', controller.setRGB);
-    
 module.exports = app;
 
-
-// curl http://localhost:9000/api/set -X POST -d "r=50&g=0&b=150"
-
+// curl http://localhost:9000/api/set -X POST -d "r=0&g=2550&b=0"
