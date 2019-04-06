@@ -4,7 +4,7 @@ import './App.scss';
 class App extends Component {
 
   handleClick = () => {
-    fetch('/api/toggle')
+    fetch('/api/random')
       .then(function (response) {
         console.info('fetch response', response);
       });
