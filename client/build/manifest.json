@@ -1,0 +1,9 @@
+{
+  "short_name": "Ligh Configurator",
+  "name": "Ligh Configurator",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#fff",
+  "background_color": "#37474f"
+}
