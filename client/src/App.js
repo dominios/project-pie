@@ -5,6 +5,10 @@ import './App.scss';
 
 class App extends Component {
 
+  componentWillMount () {
+    document.body.requestFullscreen();
+  }
+
   handleClick = () => {
     fetch('/api/v1/random')
       .then(function (response) {
