@@ -3,7 +3,8 @@
   "name": "Ligh Configurator",
   "icons": [],
   "start_url": ".",
-  "display": "fullscreen",
+  "display": "standalone",
+  "orientation": "portrain",
   "theme_color": "#fff",
   "background_color": "#37474f"
 }
