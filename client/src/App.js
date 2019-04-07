@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
+import { ChromePicker } from 'react-color';
+
 import './App.scss';
 
 class App extends Component {
 
   handleClick = () => {
     fetch('/api/v1/random')
+      .then(function (response) {
+        console.info('fetch response', response);
+      });
+  }
+
+  handleChangeComplete = (e) => {
+    console.info(e);
+    fetch('/api/v1/set', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: JSON.stringify(e.rgb)
+    })
       .then(function (response) {
         console.info('fetch response', response);
       });
@@ -28,9 +44,14 @@ class App extends Component {
           <span>TV Mode</span> <i className="fas fa-caret-down"></i>
         </section>
 
-        <button className="toggle" onClick={this.handleClick}>
+        <ChromePicker
+          onChangeComplete={this.handleChangeComplete}
+          disableAlpha={true}
+        />
+
+        {/* <button className="toggle" onClick={this.handleClick}>
           <i className="fas fa-power-off"></i>
-        </button>
+        </button> */}
 
         <section className="brightness">
           <i className="far fa-lightbulb"></i>
