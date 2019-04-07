@@ -3,7 +3,7 @@ function getRandomFromInterval (min, max) {
 }
 
 function validateColor (color) {
-    return !(typeof color !== 'number' || (color < 0 && color > 255));
+    return typeof color === 'number' && (color >= 0 || color <= 255);
 }
 
 module.exports = {

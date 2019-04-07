@@ -15,10 +15,11 @@ let controller;
 
 try {
     controller = require('./controller');
-    console.info(`${LOG_PREFIX} resetting`);
+    console.info(`${LOG_PREFIX} reset`);
     controller.reset();
+    console.log(success(`${LOG_PREFIX} RGB LED controller loaded successfully`));
 } catch (e) {
-    console.log(warning(`${LOG_PREFIX} RGB LED controller could not be loaded!`));
+    console.log(error(`${LOG_PREFIX} RGB LED controller could not be loaded!`));
 }
 
 router.get(`${API_PREFIX}/health`, (req, res) => {
@@ -37,21 +38,19 @@ router.get(`${API_PREFIX}/off`, (req, res) => {
 });
 
 router.get(`${API_PREFIX}/flicker`, (req, res) => {
-    const speed = 300;
-    let isEven = false;
-    setInterval(() => {
-        try {
-            if (isEven) {
-                setAndLog(res, 255, 0, 0);
-                isEven = false;
-            } else {
-                setAndLog(res, 0, 0, 255);
-            }
-        } catch (e) {
-
-        }
-    }, speed);
-    res.send(`Flickering job started at speed ${speed}ms`);
+    try {
+        const rgb1 = [255, 0, 0];
+        const rgb2 = [0, 0, 255];
+        const speed = 200;
+        controller.flicker(rgb1, rgb2, speed);
+        console.log(`${LOG_PREFIX} flickering between ${rgb1}, ${rgb2} at speed ${speed}ms`);
+        res.status(200);
+        res.send(`Flickering job started`);
+    } catch (e) {
+        console.log(error(e));
+        res.status(503);
+        res.send(e);
+    }
 });
 
 router.post(`${API_PREFIX}/set`, (req, res) => {
@@ -64,6 +63,7 @@ router.post(`${API_PREFIX}/set`, (req, res) => {
 function handle (res, r, g, b) {
     let message;
     try {
+        controller.stop();
         message = setAndLog(r, g, b);
         res.status(200);
     } catch (e) {
