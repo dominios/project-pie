@@ -27,10 +27,8 @@ router.get(`${API_PREFIX}/health`, (req, res) => {
 });
 
 router.get(`${API_PREFIX}/random`, (req, res) => {
-    const r = parseInt(utils.getRandomFromInterval(0, 255));
-    const g = parseInt(utils.getRandomFromInterval(0, 255));
-    const b = parseInt(utils.getRandomFromInterval(0, 255));
-    handle(res, r, g, b);
+    const clr = utils.randomColor();
+    handle(res, clr[0], clr[1], clr[2]);
 });
 
 router.get(`${API_PREFIX}/off`, (req, res) => {
@@ -41,7 +39,7 @@ router.get(`${API_PREFIX}/flicker`, (req, res) => {
     try {
         const rgb1 = [255, 0, 0];
         const rgb2 = [0, 0, 255];
-        const speed = 200;
+        const speed = 400;
         controller.flicker(rgb1, rgb2, speed);
         console.log(`${LOG_PREFIX} flickering between ${rgb1}, ${rgb2} at speed ${speed}ms`);
         res.status(200);
@@ -53,10 +51,24 @@ router.get(`${API_PREFIX}/flicker`, (req, res) => {
     }
 });
 
+router.get(`${API_PREFIX}/randomFlicker`, (req, res) => {
+    try {
+        const speed = 400;
+        controller.flicker(null, null, speed, true);
+        console.log(`${LOG_PREFIX} flickering random at speed ${speed}ms`);
+        res.status(200);
+        res.send(`Flickering job started`);
+    } catch (e) {
+        console.log(error(e));
+        res.status(503);
+        res.send(e);
+    }
+});
+
 router.post(`${API_PREFIX}/set`, (req, res) => {
-    const r = req.body.r;
-    const g = req.body.g;
-    const b = req.body.b;
+    const r = parseInt(req.body.r);
+    const g = parseInt(req.body.g);
+    const b = parseInt(req.body.b);
     handle(res, r, g, b);
 });
 
@@ -75,9 +87,9 @@ function handle (res, r, g, b) {
 }
 
 function setAndLog (r, g, b) {
-    const message = `setting leds to RGB (${r}, ${g}, ${b})`;
+    const message = `changing leds to RGB (${r}, ${g}, ${b})`;
     try {
-        controller.setRGB(r, g, b);
+        controller.transition([r, g, b]);
         console.log(message);
         return message;
     } catch (e) {
