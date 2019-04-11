@@ -5,8 +5,6 @@ const http = require('http');
 const io = require('socket.io');
 const bodyParser = require('body-parser');
 
-const router = require('./router');
-
 // if (process.env.HTTPS === 'true') {
 //     app.use((req, res, next) => {
 //         if (req.headers['x-forwarded-proto'] !== 'https') {
@@ -30,6 +28,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', express.static(__dirname + '/../client/build'));
-app.use(router);
+
+// const router = require('./router');
+// app.use(router);
 
 module.exports = app;

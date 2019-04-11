@@ -9,7 +9,7 @@ const API_PREFIX = '/api/v1';
 const error = chalk.red;
 const warning = chalk.keyword('orange');
 const success = chalk.green;
-const LOG_PREFIX = '[controller]';
+const LOG_PREFIX = '[router]';
 
 // curl http://localhost:9000/api/v1/set -X POST -d "r=50&g=0&b=150"
 

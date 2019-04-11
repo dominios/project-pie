@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const { Subject } = require('rxjs');
 
 const utils = require('./utils');
 const defaultState = require('./defaultState');
@@ -16,6 +17,20 @@ class SocketHub {
         this.connections = [];
         this.state = defaultState;
 
+        this.colors$ = new Subject();
+        this.colors$.subscribe(this.__set.bind(this));
+
+        this.controller = null;
+
+        try {
+            this.controller = require('./controller');
+            console.info(`${LOG_PREFIX} reset`);
+            this.controller.reset();
+            console.log(success(`${LOG_PREFIX} RGB LED controller loaded successfully`));
+        } catch (e) {
+            console.log(error(`${LOG_PREFIX} RGB LED controller could not be loaded!`));
+        }
+
         io.on('connection', this.onConnect.bind(this));
     }
 
@@ -30,7 +45,7 @@ class SocketHub {
         socket.on('reset', this.onReset.bind(this));
 
         this.connections.push(socket);
-        this.emitCurrentStateToOne(socket);
+        this.__emitCurrentStateToOne(socket);
     }
 
     onDisconnect (socket) {
@@ -38,16 +53,19 @@ class SocketHub {
     }
 
     onSet (data) {
+        const color = [data.r, data.g, data.b];
         this.state.currentMode = {
             id: null,
-            name: `Custom color: ${utils.rgbToHex(data.r, data.g, data.b)}`,
+            name: `Custom color: ${utils.rgbToHex(color[0], color[1], [color[2]])}`,
             off: false,
             configuration: {
-                branch1: [data.r, data.g, data.b],
+                branch1: color,
                 branch2: [],
             }
         }
-        this.emitCurrentStateToAll();
+
+        this.colors$.next(true);
+        this.__emitCurrentStateToAll();
     }
 
     onPower (powerSetting) {
@@ -57,8 +75,10 @@ class SocketHub {
         } else {
             newModeIndex = 1;
         }
+
+        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0]
-        this.emitCurrentStateToAll();
+        this.__emitCurrentStateToAll();
     }
 
     onNext () {
@@ -76,8 +96,9 @@ class SocketHub {
             newModeIndex = 1;
         }
 
+        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
-        this.emitCurrentStateToAll();
+        this.__emitCurrentStateToAll();
     }
 
     onPrevious () {
@@ -95,25 +116,39 @@ class SocketHub {
             newModeIndex = this.state.availableModes.length - 1;
         }
 
+        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
-        this.emitCurrentStateToAll();
+        this.__emitCurrentStateToAll();
     }
 
     onReset () {
+        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(1, 2)[0];
-        this.emitCurrentStateToAll();
+        this.__emitCurrentStateToAll();
     }
 
-    emitCurrentStateToOne (socket) {
+    __set () {
+        const color = this.state.currentMode.configuration.branch1;
+        const message = `${LOG_PREFIX} triggering LED change to RGB (${color})`;
+        try {
+            this.controller.transition(color);
+            console.log(message);
+            return message;
+        } catch (e) {
+            console.log(error(`${LOG_PREFIX} LED update failed!`));
+        }
+    }
+
+    __emitCurrentStateToOne (socket) {
         if (!socket.disconnected) {
             console.log(`${LOG_PREFIX} emitting current state to (${socket.id})`);
             socket.emit('state', this.state);
         }
     }
 
-    emitCurrentStateToAll () {
+    __emitCurrentStateToAll () {
         this.connections.forEach((socket) => {
-            this.emitCurrentStateToOne(socket);
+            this.__emitCurrentStateToOne(socket);
         });
     }
 

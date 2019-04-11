@@ -14,7 +14,10 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.socket = io('//localhost:9000', { autoConnect: false });
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    
+    this.socket = io(`//${hostname}:${port}`, { autoConnect: false });
     this.socket.on('connect', () => {
       console.info('connected!');
       this.setState({ hasConnection: true });
