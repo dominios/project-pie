@@ -1,10 +1,10 @@
 {
-  "short_name": "Ligh Configurator",
-  "name": "Ligh Configurator",
+  "short_name": "Light Configurator",
+  "name": "Light Configurator",
   "icons": [],
   "start_url": ".",
   "display": "standalone",
-  "orientation": "portrain",
+  "orientation": "portrait",
   "theme_color": "#fff",
   "background_color": "#37474f"
 }
