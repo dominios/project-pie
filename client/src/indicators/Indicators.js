@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class Indicators extends React.Component {
 
     isPowerOn () {
-        return !(this.props.currentMode.off === true);
+        return this.props.currentMode.name !== 'Off';
     }
 
     getPowerClassName () {

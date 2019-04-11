@@ -15,6 +15,11 @@ class SocketHub {
 
         this.io = io;
         this.connections = [];
+
+        defaultState.availableModes = defaultState.availableModes.map((m, i) => {
+            m.id = i + 1;
+            return m;
+        });
         this.state = defaultState;
 
         this.colors$ = new Subject();
@@ -40,6 +45,7 @@ class SocketHub {
         socket.on('disconnect', this.onDisconnect.bind(this, socket));
         socket.on('set', this.onSet.bind(this));
         socket.on('power', this.onPower.bind(this));
+        socket.on('preset', this.onPreset.bind(this));
         socket.on('next', this.onNext.bind(this));
         socket.on('previous', this.onPrevious.bind(this));
         socket.on('reset', this.onReset.bind(this));
@@ -57,7 +63,6 @@ class SocketHub {
         this.state.currentMode = {
             id: null,
             name: `Custom color: ${utils.rgbToHex(color[0], color[1], [color[2]])}`,
-            off: false,
             configuration: {
                 branch1: color,
                 branch2: [],
@@ -114,6 +119,11 @@ class SocketHub {
         }
 
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
+        this.__emitCurrentStateToAll();
+    }
+
+    onPreset (preset) {
+        this.state.currentMode = preset;
         this.__emitCurrentStateToAll();
     }
 

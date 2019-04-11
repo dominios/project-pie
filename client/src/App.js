@@ -15,31 +15,36 @@ class App extends Component {
     super(props);
 
     const hostname = window.location.hostname;
-    const port = window.location.port;
-    
+    const port = 9000; //window.location.port;
+
     this.socket = io(`//${hostname}:${port}`, { autoConnect: false });
+
     this.socket.on('connect', () => {
       console.info('connected!');
       this.setState({ hasConnection: true });
     });
+
     this.socket.on('disconnect', () => {
       console.info('disconnected!');
       this.setState({ hasConnection: false });
     });
+
     this.socket.on('state', (message) => {
       console.info('state', message);
       const branch1 = message.currentMode.configuration.branch1;
 
       this.setState({
+        color: rgbToHex(...branch1),
         currentMode: message.currentMode,
-        color: rgbToHex(...branch1)
+        availableModes: message.availableModes
       });
     });
 
     this.state = {
       hasConnection: false,
       currentMode: null,
-      color: '#000000'
+      color: '#000000',
+      availableModes: []
     }
   }
 
@@ -62,13 +67,6 @@ class App extends Component {
       this.socket.disconnect();
     }
     clearInterval(this.connectionCheckInterval);
-  }
-
-  handleClick = () => {
-    fetch('/api/v1/random')
-      .then(function (response) {
-        console.info('fetch response', response);
-      });
   }
 
   handleColorChange = (event) => {
@@ -95,6 +93,12 @@ class App extends Component {
     }
   }
 
+  handleSelectPreset = (preset) => {
+    if (this.socket) {
+      this.socket.emit('preset', preset);
+    }
+  }
+
   onPowerChange = (powerSetting) => {
     this.socket.emit('power', powerSetting);
   }
@@ -115,6 +119,8 @@ class App extends Component {
 
         <Mode
           currentMode={this.state.currentMode}
+          availableModes={this.state.availableModes}
+          selectPreset={this.handleSelectPreset}
         />
 
         <ColorPicker

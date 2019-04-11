@@ -1,7 +1,5 @@
 module.exports = {
     currentMode: {
-        id: 0,
-        off: true,
         name: 'Off',
         configuration: {
             branch1: [0, 0, 0],
@@ -10,8 +8,6 @@ module.exports = {
     },
     availableModes: [
         {
-            id: 0,
-            off: true,
             name: 'Off',
             configuration: {
                 branch1: [0, 0, 0],
@@ -19,7 +15,6 @@ module.exports = {
             }
         },
         {
-            id: 1,
             name: 'White',
             configuration: {
                 branch1: [255, 255, 255],
@@ -27,15 +22,13 @@ module.exports = {
             }
         },
         {
-            id: 2,
-            name: 'Red',
+            name: 'Light Coral',
             configuration: {
-                branch1: [255, 0, 0],
-                branch2: [255, 0, 0]
+                branch1: [240, 128, 128],
+                branch2: [240, 128, 128]
             }
         },
         {
-            id: 3,
             name: 'Crimson',
             configuration: {
                 branch1: [220, 20, 60],
@@ -43,31 +36,55 @@ module.exports = {
             }
         },
         {
-            id: 4,
+            name: 'Red',
+            configuration: {
+                branch1: [255, 0, 0],
+                branch2: [255, 0, 0]
+            }
+        },
+        {
             name: 'Pink',
+            configuration: {
+                branch1: [255, 192, 203],
+                branch2: [255, 192, 203],
+            }
+        },
+        {
+            name: 'Deep Pink',
             configuration: {
                 branch1: [255, 20, 147],
                 branch2: [255, 20, 147],
             }
         },
         {
-            id: 5,
-            name: 'Fuchsia',
+            name: 'Viloet',
+            configuration: {
+                branch1: [238, 130, 238],
+                branch2: [238, 130, 238],
+            }
+        },
+        {
+            name: 'Magenta',
             configuration: {
                 branch1: [255, 0, 255],
                 branch2: [255, 0, 255]
             }
         },
         {
-            id: 6,
-            name: 'Viloet',
+            name: 'Blue Violet',
             configuration: {
-                branch1: [153, 50, 204],
-                branch2: [153, 50, 204],
+                branch1: [138, 43, 226],
+                branch2: [138, 43, 226]
             }
-        },     
+        },
         {
-            id: 7,
+            name: 'Purple',
+            configuration: {
+                branch1: [128, 0, 128],
+                branch2: [128, 0, 128]
+            }
+        },
+        {
             name: 'Orange',
             configuration: {
                 branch1: [255, 165, 0],
@@ -75,7 +92,6 @@ module.exports = {
             }
         },
         {
-            id: 8,
             name: 'Gold',
             configuration: {
                 branch1: [255, 215, 0],
@@ -83,7 +99,6 @@ module.exports = {
             }
         },
         {
-            id: 9,
             name: 'Yellow',
             configuration: {
                 branch1: [255, 255, 0],
@@ -91,7 +106,6 @@ module.exports = {
             }
         },
         {
-            id: 10,
             name: 'Green Apple',
             configuration: {
                 branch1: [173, 255, 47],
@@ -99,7 +113,6 @@ module.exports = {
             }
         },
         {
-            id: 11,
             name: 'Lime',
             configuration: {
                 branch1: [0, 255, 0],
@@ -107,7 +120,6 @@ module.exports = {
             }
         },
         {
-            id: 12,
             name: 'Green',
             configuration: {
                 branch1: [0, 128, 0],
@@ -115,7 +127,6 @@ module.exports = {
             }
         },
         {
-            id: 13,
             name: 'Teal',
             configuration: {
                 branch1: [0, 128, 128],
@@ -123,7 +134,6 @@ module.exports = {
             }
         },
         {
-            id: 14,
             name: 'Cyan',
             configuration: {
                 branch1: [0, 255, 255],
@@ -131,7 +141,6 @@ module.exports = {
             }
         },
         {
-            id: 15,
             name: 'Turquoise',
             configuration: {
                 branch1: [54, 224, 208],
@@ -139,7 +148,6 @@ module.exports = {
             }
         },
         {
-            id: 16,
             name: 'Steel Blue',
             configuration: {
                 branch1: [70, 130, 180],
@@ -147,7 +155,6 @@ module.exports = {
             }
         },
         {
-            id: 17,
             name: 'Deep Sky Blue',
             configuration: {
                 branch1: [0, 191, 255],
@@ -155,7 +162,6 @@ module.exports = {
             }
         },
         {
-            id: 18,
             name: 'Royal Blue',
             configuration: {
                 branch1: [65, 105, 225],
@@ -163,7 +169,6 @@ module.exports = {
             }
         },
         {
-            id: 19,
             name: 'Blue',
             configuration: {
                 branch1: [0, 0, 255],
