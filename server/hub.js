@@ -76,8 +76,8 @@ class SocketHub {
             newModeIndex = 1;
         }
 
-        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0]
+        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
@@ -96,8 +96,8 @@ class SocketHub {
             newModeIndex = 1;
         }
 
-        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
+        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
@@ -116,8 +116,8 @@ class SocketHub {
             newModeIndex = this.state.availableModes.length - 1;
         }
 
-        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
+        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
