@@ -11,6 +11,8 @@ const warning = chalk.keyword('orange');
 const success = chalk.green;
 const LOG_PREFIX = '[controller]';
 
+// curl http://localhost:9000/api/v1/set -X POST -d "r=50&g=0&b=150"
+
 let controller;
 
 try {

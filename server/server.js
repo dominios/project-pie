@@ -1,32 +1,35 @@
 require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
+const io = require('socket.io');
 const bodyParser = require('body-parser');
-const io = require('socket.io')(http);
 
 const router = require('./router');
 
+// if (process.env.HTTPS === 'true') {
+//     app.use((req, res, next) => {
+//         if (req.headers['x-forwarded-proto'] !== 'https') {
+//             return res.redirect(['https://', req.get('Host'), req.url].join(''));
+//         }
+//         return next();
+//     });
+// }
+
 const app = express();
-const server = http.createServer(app);
+const server = http.Server(app);
+
+const SocketHub = require('./hub');
+const hub = new SocketHub(io(server));
+
+server.listen(process.env.PORT, () => {
+    console.log(`HTTP server started on port ${process.env.PORT}`);
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', express.static(__dirname + '/../client/build'));
 app.use(router);
-
-// curl http://localhost:9000/api/v1/set -X POST -d "r=50&g=0&b=150"
-
-server.listen(process.env.PORT, () => {
-    console.log(`HTTP server started on port ${process.env.PORT}`);
-});
-
-io.on('connection', (socket) => {
-    console.log('socket.io connection initiated');
-
-    socket.on('disconnect', function () {
-        console.log('socket.io connection disconnected');
-    });
-});
 
 module.exports = app;

@@ -85,7 +85,7 @@ html {
         position: absolute;
         right: 2em;
         top: 3em;
-        .svg-inline--fa {
+        .fa {
           &:first-of-type {
             margin-right: 0.6em;
           }
@@ -108,6 +108,35 @@ html {
           content: 'Mode';
         }
       }
+
+      .colorPicker {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        input,
+        .indicator {
+          width: 25em;
+          height: 25em;
+          line-height: 25em;
+          border-radius: 100%;
+        }
+        input {
+          opacity: 0;
+          position: absolute;
+          width: 32em;
+          height: 32em;
+          z-index: 9;
+        }
+        .indicator {
+          position: relative;
+          text-align: center;
+          .fas {
+            font-size: 3.5em;
+            // color: rgba(255, 255, 255, .3);
+            filter: brightness(85%);
+          }
+        }
+      }
     
       .toggle {
     
@@ -120,7 +149,7 @@ html {
         }
 
         &:active {
-          .svg-inline--fa {
+          .fa {
             color: darken(#fafafa, 15%);
             background: darken($COLOR_PRIMARY, 15%);
           }
@@ -128,7 +157,7 @@ html {
       
         font-size: 8em;
       
-        .svg-inline--fa {
+        .fa {
           padding: 1em;
           border-radius: 100%;
           background: $COLOR_PRIMARY;
@@ -164,7 +193,7 @@ html {
           width: 70%;
           background: #62727b;
       
-          .svg-inline--fa {
+          .fa {
             &:first-of-type {
               color: #b1b1b1;
             }

@@ -1,12 +1,64 @@
 import React, { Component } from 'react';
-import { ChromePicker } from 'react-color';
+import io from 'socket.io-client';
 
+import Mode from './mode/Mode';
+import Indicators from './indicators/Indicators';
 import './App.scss';
+import { hexToRgb, rgbToHex } from './utils';
+import ColorPicker from './colorPicker/ColorPicker';
+
+const CONNECTION_CHECK_INTERVAL = 5000; // how often check for a new connection if not connected (ms)
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.socket = io('//localhost:9000', { autoConnect: false });
+    this.socket.on('connect', () => {
+      console.info('connected!');
+      this.setState({ hasConnection: true });
+    });
+    this.socket.on('disconnect', () => {
+      console.info('disconnected!');
+      this.setState({ hasConnection: false });
+    });
+    this.socket.on('state', (message) => {
+      console.info('state', message);
+      const branch1 = message.currentMode.configuration.branch1;
+
+      this.setState({
+        currentMode: message.currentMode,
+        color: rgbToHex(...branch1)
+      });
+    });
+
+    this.state = {
+      hasConnection: false,
+      currentMode: null,
+      color: '#000000'
+    }
+  }
+
+  checkConnection () {
+    if (!this.state.hasConnection) {
+      console.log('trying to connect...');
+      this.socket.open();
+    }
+  }
+
   componentWillMount () {
-    document.body.requestFullscreen();
+    this.checkConnection();
+    this.connectionCheckInterval = setInterval(() => {
+      this.checkConnection();
+    }, CONNECTION_CHECK_INTERVAL);
+  }
+
+  componentWillUnmount () {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    clearInterval(this.connectionCheckInterval);
   }
 
   handleClick = () => {
@@ -16,19 +68,11 @@ class App extends Component {
       });
   }
 
-  handleChangeComplete = (e) => {
-    console.info(e);
-    fetch('/api/v1/set', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(e.rgb)
-    })
-      .then(function (response) {
-        console.info('fetch response', response);
-      });
-  }
+  handleColorChange = (event) => {
+    if (this.socket) {
+      this.socket.emit('set', hexToRgb(event.currentTarget.value));
+    }
+  };
 
   render () {
     return (
@@ -38,24 +82,19 @@ class App extends Component {
           <h1>Light Configurator</h1>
         </header>
 
-        <section className="indicators">
-          <i className="fas fa-2x fa-fw fa-power-off text-white"></i>
-          <i className="fas fa-2x fa-fw fa-wifi text-danger blinking"></i>
-          {/* <i className="fas fa-2x fa-fw fa-wifi text-success"></i> */}
-        </section>
-
-        <section className="preset">
-          <span>TV Mode</span> <i className="fas fa-caret-down"></i>
-        </section>
-
-        <ChromePicker
-          onChangeComplete={this.handleChangeComplete}
-          disableAlpha={true}
+        <Indicators
+          currentMode={this.state.currentMode}
+          hasConnection={this.state.hasConnection}
         />
 
-        {/* <button className="toggle" onClick={this.handleClick}>
-          <i className="fas fa-power-off"></i>
-        </button> */}
+        <Mode
+          currentMode={this.state.currentMode}
+        />
+
+        <ColorPicker
+          color={this.state.color}
+          onChange={this.handleColorChange}
+        />
 
         <section className="brightness">
           <i className="far fa-lightbulb"></i>

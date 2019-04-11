@@ -8,10 +8,12 @@
     "chalk": "^2.4.2",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "pigpio": "^1.2.2",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {},
+  "optionalDependencies": {
+    "pigpio": "^1.2.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
