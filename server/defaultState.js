@@ -1,6 +1,7 @@
 module.exports = {
     currentMode: {
         id: 0,
+        off: true,
         name: 'Off',
         configuration: {
             branch1: [0, 0, 0],
@@ -10,6 +11,7 @@ module.exports = {
     availableModes: [
         {
             id: 0,
+            off: true,
             name: 'Off',
             configuration: {
                 branch1: [0, 0, 0],
@@ -42,7 +44,7 @@ module.exports = {
         },
         {
             id: 4,
-            name: 'White',
+            name: 'Blue',
             configuration: {
                 branch1: [0, 0, 255],
                 branch2: [0, 0, 255]

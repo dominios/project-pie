@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 
 class Indicators extends React.Component {
 
+    isPowerOn () {
+        return !(this.props.currentMode.off === true);
+    }
+
     getPowerClassName () {
         const classes = ['fa', 'fa-2x', 'fa-fw', 'fa-power-off'];
         try {
-            if (this.props.currentMode.name !== 'Off') {
+            if (this.isPowerOn()) {
                 return classes.concat('text-white');
             }
-            throw new Error('is not offline');
+            throw new Error('is offline');
         } catch (e) {
             return classes.concat('text-muted');
         }
@@ -25,7 +29,7 @@ class Indicators extends React.Component {
 
     render () {
         return (<section className="indicators">
-            <i className={this.getPowerClassName().join(' ')}></i>
+            <i className={this.getPowerClassName().join(' ')} onClick={() => this.props.onPowerChange(!this.isPowerOn())}></i>
             <i className={this.getWifiClassName().join(' ')}></i>
         </section>);
     }
@@ -34,7 +38,8 @@ class Indicators extends React.Component {
 
 Indicators.propTypes = {
     hasConnection: PropTypes.bool.isRequired,
-    currentMode: PropTypes.any
+    currentMode: PropTypes.any,
+    onPowerChange: PropTypes.func
 }
 
 export default Indicators;

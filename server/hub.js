@@ -24,6 +24,10 @@ class SocketHub {
 
         socket.on('disconnect', this.onDisconnect.bind(this, socket));
         socket.on('set', this.onSet.bind(this));
+        socket.on('power', this.onPower.bind(this));
+        socket.on('next', this.onNext.bind(this));
+        socket.on('previous', this.onPrevious.bind(this));
+        socket.on('reset', this.onReset.bind(this));
 
         this.connections.push(socket);
         this.emitCurrentStateToOne(socket);
@@ -37,11 +41,66 @@ class SocketHub {
         this.state.currentMode = {
             id: null,
             name: `Custom color: ${utils.rgbToHex(data.r, data.g, data.b)}`,
+            off: false,
             configuration: {
                 branch1: [data.r, data.g, data.b],
                 branch2: [],
             }
         }
+        this.emitCurrentStateToAll();
+    }
+
+    onPower (powerSetting) {
+        let newModeIndex;
+        if (powerSetting === false) {
+            newModeIndex = 0;
+        } else {
+            newModeIndex = 1;
+        }
+        this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0]
+        this.emitCurrentStateToAll();
+    }
+
+    onNext () {
+
+        let newModeIndex;
+
+        if (this.state.currentMode.id > 0) {
+            const current = this.state.availableModes.find((m) => m.id === this.state.currentMode.id);
+            const currentIndex = this.state.availableModes.indexOf(current);
+            newModeIndex = currentIndex + 1;
+            if (newModeIndex > (this.state.availableModes.length - 1)) {
+                newModeIndex = 1;
+            }
+        } else {
+            newModeIndex = 1;
+        }
+
+        this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
+        this.emitCurrentStateToAll();
+    }
+
+    onPrevious () {
+
+        let newModeIndex;
+
+        if (this.state.currentMode.id > 0) {
+            const current = this.state.availableModes.find((m) => m.id === this.state.currentMode.id);
+            const currentIndex = this.state.availableModes.indexOf(current);
+            newModeIndex = currentIndex - 1;
+            if (newModeIndex === 0) {
+                newModeIndex = this.state.availableModes.length - 1;
+            }
+        } else {
+            newModeIndex = this.state.availableModes.length - 1;
+        }
+
+        this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
+        this.emitCurrentStateToAll();
+    }
+
+    onReset () {
+        this.state.currentMode = this.state.availableModes.slice(1, 2)[0];
         this.emitCurrentStateToAll();
     }
 

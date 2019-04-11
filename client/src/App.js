@@ -74,6 +74,28 @@ class App extends Component {
     }
   };
 
+  handleNextMode = () => {
+    if (this.socket) {
+      this.socket.emit('next');
+    }
+  }
+
+  handlePreviousMode = () => {
+    if (this.socket) {
+      this.socket.emit('previous');
+    }
+  }
+
+  handleReset = () => {
+    if (this.socket) {
+      this.socket.emit('reset');
+    }
+  }
+
+  onPowerChange = (powerSetting) => {
+    this.socket.emit('power', powerSetting);
+  }
+
   render () {
     return (
       <div className="app">
@@ -85,6 +107,7 @@ class App extends Component {
         <Indicators
           currentMode={this.state.currentMode}
           hasConnection={this.state.hasConnection}
+          onPowerChange={this.onPowerChange}
         />
 
         <Mode
@@ -107,15 +130,15 @@ class App extends Component {
         <section className="buttons">
 
           <div>
-            <i className="fas fa-redo"></i>
+            <i className="fas fa-redo" onClick={this.handleReset}></i>
           </div>
 
           <div>
-            <i className="fas fa-angle-left"></i>
+            <i className="fas fa-angle-left" onClick={this.handlePreviousMode}></i>
           </div>
 
           <div>
-            <i className="fas fa-angle-right"></i>
+            <i className="fas fa-angle-right" onClick={this.handleNextMode}></i>
           </div>
 
           <div>
