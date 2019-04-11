@@ -126,7 +126,11 @@ class SocketHub {
         const color = this.state.currentMode.configuration.branch1;
         const message = `${LOG_PREFIX} triggering LED change to RGB (${color})`;
         try {
-            this.controller.transition(color);
+            if (color[0] + color[1] + color[2] === 0) {
+                this.controller.off();
+            } else {
+                this.controller.transition(color);
+            }
             console.log(message);
             return message;
         } catch (e) {
