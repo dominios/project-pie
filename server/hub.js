@@ -64,7 +64,6 @@ class SocketHub {
             }
         }
 
-        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
@@ -77,7 +76,6 @@ class SocketHub {
         }
 
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0]
-        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
@@ -97,7 +95,6 @@ class SocketHub {
         }
 
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
-        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
@@ -117,12 +114,10 @@ class SocketHub {
         }
 
         this.state.currentMode = this.state.availableModes.slice(newModeIndex, newModeIndex + 1)[0];
-        this.colors$.next(true);
         this.__emitCurrentStateToAll();
     }
 
     onReset () {
-        this.colors$.next(true);
         this.state.currentMode = this.state.availableModes.slice(1, 2)[0];
         this.__emitCurrentStateToAll();
     }
@@ -147,6 +142,7 @@ class SocketHub {
     }
 
     __emitCurrentStateToAll () {
+        this.colors$.next(true);
         this.connections.forEach((socket) => {
             this.__emitCurrentStateToOne(socket);
         });
