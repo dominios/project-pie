@@ -54,7 +54,7 @@ function transition (to, duration) {
     smooth(from, to, duration || 400);
 }
 
-function reset () {
+function off () {
     stopPrevious();
     currentColor = [0, 0, 0];
     ledRed.digitalWrite(0);
@@ -135,7 +135,7 @@ function flicker (rgb1, rgb2, speed, random) {
 module.exports = {
     setRGB: setRGB,
     flicker: flicker,
-    reset: reset,
+    off: off,
     stop: stopPrevious,
     transition: transition
 };
